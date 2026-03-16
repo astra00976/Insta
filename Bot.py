@@ -25,7 +25,7 @@ job_queue = Queue()
 # INSTAGRAM SESSION
 # =========================
 
-IG_SESSIONID = "44603123622%3A8tr0I8txy4H2XZ%3A0%3AAYirVqJpYExfJvRzqFDTj5nsqeQq-AJbRY3HKUh7AA"
+IG_SESSIONID = "8628280617:AAEHHRQZ2dxsxoFWvmLs1PVO_wSCRn0rHPc"
 
 # =========================
 # PROFILE INFO FUNTION
