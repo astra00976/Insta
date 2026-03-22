@@ -179,12 +179,11 @@ def scrape_background(job, context):
 
             if not job.running:
                 break
-            log("Scanning page for posts...")
             links = page.evaluate("""
-                Array.from(document.querySelectorAll('a'))
-                    .map(a => a.href)
-                    .filter(h => h.includes('/p/') || h.includes('/reel/'))
-            """)
+              Array.from(document.querySelectorAll('article a'))
+             .map(a => a.href)
+             .filter(h => /\\/(p|reel)\\//.test(h))
+           """)
 
             new_posts = 0
 
