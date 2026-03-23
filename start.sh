@@ -7,4 +7,4 @@ pip install -r requirements.txt
 
 playwright install chromium
 
-python username_to_media_bot_og.py
+python instausername.py
