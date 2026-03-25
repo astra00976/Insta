@@ -17,6 +17,7 @@ import instaloader
 # =========================
 
 TOKEN = "8780791852:AAHqVZYRVc7QEyzCNxzAqIdfDCZuoMPZtYY"
+IG_SESSIONID = "80080172860%3AedmtJj7qIp0cqR%3A18%3AAYiRXOQs7iwbutIMrrwk_B7gOwNp-dylmIbqSzcMJQ"
 bot = telebot.TeleBot(TOKEN, threaded=True)
 from queue import Queue
 
@@ -25,7 +26,7 @@ job_queue = Queue()
 # INSTAGRAM SESSION
 # =========================
 
-IG_SESSIONID = "80080172860%3AVVaoyS6Nn1TxEH%3A12%3AAYirglVwcdWThjokSaOe82QPLQRmv3P7DxdKN9SZOw"
+#IG_SESSIONID = "80080172860%3AedmtJj7qIp0cqR%3A18%3AAYgXYTx6RH3MPT2jzgG7nHQbP6OsEsetO5LnbQCUFg"
 
 # =========================
 # JOB SYSTEM
@@ -179,11 +180,12 @@ def scrape_background(job, context):
 
             if not job.running:
                 break
+            log("Scanning page for posts...")
             links = page.evaluate("""
-              Array.from(document.querySelectorAll('article a'))
-             .map(a => a.href)
-             .filter(h => /\\/(p|reel)\\//.test(h))
-           """)
+                Array.from(document.querySelectorAll('a'))
+                    .map(a => a.href)
+                    .filter(h => h.includes('/p/') || h.includes('/reel/'))
+            """)
 
             new_posts = 0
 
