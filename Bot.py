@@ -1,3 +1,6 @@
+start()
+
+bot.infinity_polling()
 #USERNAM TO MEDIA INSTA BOT(OG)
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -17,7 +20,6 @@ import instaloader
 # =========================
 
 TOKEN = "8780791852:AAHqVZYRVc7QEyzCNxzAqIdfDCZuoMPZtYY"
-IG_SESSIONID = "80080172860%3AedmtJj7qIp0cqR%3A18%3AAYiRXOQs7iwbutIMrrwk_B7gOwNp-dylmIbqSzcMJQ"
 bot = telebot.TeleBot(TOKEN, threaded=True)
 from queue import Queue
 
@@ -26,7 +28,7 @@ job_queue = Queue()
 # INSTAGRAM SESSION
 # =========================
 
-#IG_SESSIONID = "80080172860%3AedmtJj7qIp0cqR%3A18%3AAYgXYTx6RH3MPT2jzgG7nHQbP6OsEsetO5LnbQCUFg"
+IG_SESSIONID = "45575449095%3APTeNL8atjbF3Xs%3A9%3AAYgfcs9SbBqHG1ebl1Qqnq2YL5l2j5od0mbvk8b74Q"
 
 # =========================
 # JOB SYSTEM
@@ -64,7 +66,25 @@ print("Instaloader session active")
 # =========================
 # START PLAYWRIGHT
 # =========================
+def get_profile_info(username):
+    try:
+        profile = instaloader.Profile.from_username(L.context, username)
 
+        data = {
+            "username": profile.username,
+            "full_name": profile.full_name,
+            "followers": profile.followers,
+            "following": profile.followees,
+            "posts": profile.mediacount,
+            "bio": profile.biography,
+            "profile_pic": profile.profile_pic_url
+        }
+
+        return data
+
+    except Exception as e:
+        log(f"Profile fetch error: {e}")
+        return None
 print("Starting browser...")
 
 def get_profile_posts(username, limit=100):
@@ -309,6 +329,7 @@ job_queue = Queue()
 def profile_handler(message):
 
     username = extract_username(message.text)
+    
 
     if not username:
 
@@ -317,7 +338,27 @@ def profile_handler(message):
             "❌ Invalid input.\n\nSend:\n• Instagram username\n• Instagram profile link"
         )
         return
+    profile = get_profile_info(username)
 
+    if not profile:
+        bot.send_message(message.chat.id, "❌ Failed to fetch profile info")
+        return
+    caption = f"""
+👤 Username: {profile['username']}
+📛 Name: {profile['full_name']}
+👥 Followers: {profile['followers']}
+➡️ Following: {profile['following']}
+📸 Posts: {profile['posts']}
+
+📝 Bio:
+{profile['bio']}
+"""
+
+    try:
+        response = requests.get(profile['profile_pic'])
+        bot.send_photo(message.chat.id, response.content, caption=caption)
+    except:
+        bot.send_message(message.chat.id, caption)
     job = Job(username)
     user_jobs[message.chat.id] = job
 
@@ -511,3 +552,4 @@ threading.Thread(
 ).start()
 
 bot.infinity_polling()
+    
